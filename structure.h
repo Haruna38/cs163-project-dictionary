@@ -25,46 +25,17 @@ class Charset {
         Charset *left, *right;
         Charset(char k, Character* value): key(k), data(value), left(NULL), right(NULL) {}
 
-        ~Charset () {
-            delete data;
-            if (left != NULL) delete left;
-            if (right != NULL) delete right;
-        }
+        // ~Charset ();
 };
 
 class CharsetTree {
     public:
-        Charset* add (char key, Character* &value) {
-            Charset *newNode = new Charset(key, value);
-            if (data == NULL) return data = newNode;
-            Charset *prev = NULL, *cur = data;
-            while (cur != NULL) {
-                if (key == cur->key) {
-                    delete value;
-                    delete newNode;
-                    return cur;
-                }
-                prev = cur;
-                if (key < cur->key) cur = cur->left;
-                else cur = cur->right;
-            }
-            if (key < cur->key) return prev->left = newNode;
-            return prev->right = newNode;
-        }
+        Charset* add (char key, Character* &value);
+        Charset* find (char key);
 
-        Charset* find (char key) {
-            Charset *cur = data;
-            while (cur != NULL) {
-                if (key < cur->key) cur = cur->left;
-                else if (key > cur->key) cur = cur->right;
-                else break;
-            }
-            return cur;
-        }
+        bool isEmpty();
 
-        ~CharsetTree () {
-            if (data != NULL) delete data;
-        }
+        // ~CharsetTree ();
     private:
         Charset *data = NULL;
 };
@@ -79,21 +50,11 @@ class Character {
         Character (Character *parent, string pOF, string def, string tpc): parent(parent), partOfSpeech(pOF), definition(def), topic(tpc), isLastCharacter(true) {};
         Character (Character *parent): parent(parent), partOfSpeech(""), definition(""), topic(""), isLastCharacter(false) {};
 
-        void display () {
-            cout << "Part Of Speech: (" << partOfSpeech << ") " << pOFDataset->getFullNameOf(partOfSpeech) << endl;
-            cout << "Definition: " << definition << endl;
-            cout << "Topic/Field: " << topic << endl; 
-        }
+        void display ();
 
-        Character* next (char f) {
-            Charset* found = nextCharacters->find(f);
-            if (found == NULL) return NULL;
-            return found->data;
-        }
+        Character* next (char f);
 
-        ~Character () {
-            delete nextCharacters;
-        }
+        // ~Character ();
 };
 
 class Dictionary {
@@ -113,6 +74,27 @@ class Dictionary {
             node->isLastCharacter = true;
         }
 
+        void remove(string word) {
+            Character *node = data;
+            for (int i = 0; i < word.length(); ++i) {
+                node = node->next(word[i]);
+                if (node == NULL) return;
+            }
+            if (!node->isLastCharacter) return;
+            // traverse back
+            bool lastWordDeleted = false;
+            while (node->parent != data) {
+                Character* cur = node;
+                node = node->parent;
+                if (!lastWordDeleted) {
+                    lastWordDeleted = true;
+                    cur->isLastCharacter = false;
+                }
+                if (cur->isLastCharacter || !cur->nextCharacters->isEmpty()) return;
+                delete cur;
+            }
+        }
+
         Character* find(string word) {
             Character *node = data;
             for (int i = 0; i < word.length(); ++i) {
@@ -129,15 +111,50 @@ class Dictionary {
 
         void display (string word) {
             Character *result = find(word);
-            if (result == NULL) cout << "No results found for the word '" << word << "'. Maybe you wish to add it as a custom word?";
+            if (result == NULL) cout << "No results found for the word '" << word << "'. Maybe you wish to add it as a custom word?" << endl;
             else {
                 cout << "Definition of the word '" << word << "':" << endl;
                 result->display();
             }
         }
 
-        void import (string pathToFile) {
+        bool import (string pathToFile, char discriminator, bool repeatable, bool ignoreFirstLine) {
+            ifstream fin(pathToFile);
+            if (fin.fail()) {
+                fin.close();
+                cout << "Import failed for the dictionary '" << name << "'." << endl;
+                return false;
+            }
+            string data;
+            int count = 0;
+            while (!fin.eof()) {
+                getline(fin, data);
+                if (data == "") continue;
+                if (ignoreFirstLine) {
+                    ignoreFirstLine = false;
+                    continue;
+                }
+                ++count;
+                string word = "", definition = "";
+                int i = 0;
+                for (; i < data.length(); ++i) {
+                    if (data[i] == discriminator) {
+                        ++i;
+                        if (repeatable) while (data[i] == discriminator) ++i;
+                        break;
+                    }
+                    word += data[i];
+                }
+                for (; i < data.length(); ++i) definition += data[i];
 
+                add(word, "", definition, "");
+            }
+
+            fin.close();
+
+            cout << "Imported " << count << " word(s) to the dictionary '" << name << "'." << endl; 
+
+            return true;
         }
 
         Dictionary (string namae): name(namae) {};
@@ -148,3 +165,65 @@ class Dictionary {
     private:
         Character *data = new Character(NULL);
 };
+
+// Charset::~Charset () {
+//     delete data;
+//     if (left != NULL) delete left;
+//     if (right != NULL) delete right;
+// };
+
+Charset* CharsetTree::add (char key, Character* &value) {
+    Charset *newNode = new Charset(key, value);
+    if (data == NULL) return data = newNode;
+    Charset *prev = NULL, *cur = data;
+    while (cur != NULL) {
+        if (key == cur->key) {
+            if (value->isLastCharacter) {
+                cur->data->isLastCharacter = true;
+                cur->data->definition += (cur->data->definition == "" ? "" : "\n\n") + value->definition;
+                cur->data->topic += (cur->data->topic == "" ? "" : ", ")  + value->topic;
+            }
+            delete newNode;
+            return cur;
+        }
+        prev = cur;
+        if (key < cur->key) cur = cur->left;
+        else cur = cur->right;
+    }
+    if (key < prev->key) return prev->left = newNode;
+    return prev->right = newNode;
+};
+
+Charset* CharsetTree::find (char key) {
+    Charset *cur = data;
+    while (cur != NULL) {
+        if (key < cur->key) cur = cur->left;
+        else if (key > cur->key) cur = cur->right;
+        else break;
+    }
+    return cur;
+};
+
+bool CharsetTree::isEmpty () {
+    return data == NULL;
+}
+
+// CharsetTree::~CharsetTree () {
+//     if (data != NULL) delete data;
+// };
+
+void Character::display () {
+    cout << "Part Of Speech: (" << partOfSpeech << ") " << pOFDataset->getFullNameOf(partOfSpeech) << endl;
+    cout << "Definition: " << definition << endl;
+    cout << "Topic/Field: " << topic << endl; 
+};
+
+Character* Character::next (char f) {
+    Charset* found = nextCharacters->find(f);
+    if (found == NULL) return NULL;
+    return found->data;
+};
+
+// Character::~Character () {
+//     delete nextCharacters;
+// }
