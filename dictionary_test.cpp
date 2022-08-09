@@ -1,6 +1,13 @@
 #include "structure.h"
+#include "main.h"
+#include "Console.h"
+#include "functions.h"
 
 int main () {
+
+    resizeConsole(ConsoleWidth, ConsoleHeight); // Console size
+    SetConsoleTitle(TEXT("Dictionary")); // Dictionary Title
+
     // Dictionary *dict = new Dictionary("English - Vietnamese");
     // dict->add("name", "n", "Tên gọi", "A topic");
     // dict->display("name");
@@ -24,11 +31,17 @@ int main () {
 
     dict2->display("ALPHA");
 
-    dict->remove("ALPHA");
+    dict2->remove("ALPHA");
 
-    dict->display("ALPHA");
+    dict2->display("ALPHA");
 
-    dict->display("AMD");
+    dict2->display("AMD");
+
+    dict2->display("AMA");
+
+    dict2->remove("AMA");
+
+    dict2->display("AMA");
 
     delete dict2;
 

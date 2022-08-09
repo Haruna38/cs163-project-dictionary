@@ -47,7 +47,7 @@ class Character {
         bool isLastCharacter;
         string partOfSpeech = "", definition = "", topic = "";
         Character () {};
-        Character (Character *parent, string pOF, string def, string tpc): parent(parent), partOfSpeech(pOF), definition(def), topic(tpc), isLastCharacter(true) {};
+        Character (Character *parent, string pOF, string def, string tpc): parent(parent), partOfSpeech(pOF), definition("* " + def), topic(tpc), isLastCharacter(true) {};
         Character (Character *parent): parent(parent), partOfSpeech(""), definition(""), topic(""), isLastCharacter(false) {};
 
         void display ();
@@ -125,29 +125,46 @@ class Dictionary {
                 cout << "Import failed for the dictionary '" << name << "'." << endl;
                 return false;
             }
-            string data;
+            string word = "", definition = "";
             int count = 0;
-            while (!fin.eof()) {
-                getline(fin, data);
-                if (data == "") continue;
-                if (ignoreFirstLine) {
-                    ignoreFirstLine = false;
-                    continue;
-                }
-                ++count;
-                string word = "", definition = "";
+            while (!fin.eof() || word != "") {
                 int i = 0;
-                for (; i < data.length(); ++i) {
-                    if (data[i] == discriminator) {
-                        ++i;
-                        if (repeatable) while (data[i] == discriminator) ++i;
-                        break;
+                string temp = "", data = "";
+                if (!fin.eof()) {
+                    getline(fin, data);
+                    if (data == "") continue;
+                    if (ignoreFirstLine) {
+                        ignoreFirstLine = false;
+                        continue;
                     }
-                    word += data[i];
+                    bool reac = false;
+                    for (; i < data.length(); ++i) {
+                        if (data[i] == discriminator) {
+                            reac = true;
+                            ++i;
+                            if (repeatable) while (data[i] == discriminator) ++i;
+                            break;
+                        }
+                        temp += data[i];
+                    }
+                    if (!reac) {
+                        definition += (definition == "" ? "" : "\n");
+                        definition += "* " + temp;
+                        continue;
+                    }
                 }
-                for (; i < data.length(); ++i) definition += data[i];
+                else temp = "";
 
-                add(word, "", definition, "");
+                if (word != "") {
+                    ++count;
+                    add(word, "", definition, "");
+                }
+
+                word = temp;
+
+                definition = "";
+
+                if (!fin.eof()) for (; i < data.length(); ++i) definition += data[i];
             }
 
             fin.close();
@@ -180,7 +197,8 @@ Charset* CharsetTree::add (char key, Character* &value) {
         if (key == cur->key) {
             if (value->isLastCharacter) {
                 cur->data->isLastCharacter = true;
-                cur->data->definition += (cur->data->definition == "" ? "" : "\n\n") + value->definition;
+                cur->data->definition += (cur->data->definition == "" ? "" : "\n");
+                cur->data->definition += "* " + value->definition;
                 cur->data->topic += (cur->data->topic == "" ? "" : ", ")  + value->topic;
             }
             delete newNode;
@@ -214,7 +232,7 @@ bool CharsetTree::isEmpty () {
 
 void Character::display () {
     cout << "Part Of Speech: (" << partOfSpeech << ") " << pOFDataset->getFullNameOf(partOfSpeech) << endl;
-    cout << "Definition: " << definition << endl;
+    cout << "Definition:" << endl << definition << endl;
     cout << "Topic/Field: " << topic << endl; 
 };
 
