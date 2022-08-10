@@ -1,19 +1,16 @@
 #include "structure.h"
 #include "main.h"
 #include "Console.h"
-#include "functions.h"
+#include "function.h"
 
-int main () {
-
-    resizeConsole(ConsoleWidth, ConsoleHeight); // Console size
-    SetConsoleTitle(TEXT("Dictionary")); // Dictionary Title
-
+int dictionary()
+{
     // Dictionary *dict = new Dictionary("English - Vietnamese");
     // dict->add("name", "n", "Tên gọi", "A topic");
     // dict->display("name");
     // dict->display("nam");
-    
-    Dictionary *dict = new Dictionary("Emotional");
+
+    Dictionary* dict = new Dictionary("Emotional");
     dict->import("emotional.txt", '\t', true, false);
 
     dict->display("4U");
@@ -26,7 +23,7 @@ int main () {
 
     delete dict;
 
-    Dictionary *dict2 = new Dictionary("Slangs");
+    Dictionary* dict2 = new Dictionary("Slangs");
     dict2->import("slang.txt", '`', false, true);
 
     dict2->display("ALPHA");
@@ -46,4 +43,13 @@ int main () {
     delete dict2;
 
     return 0;
+}
+
+int main () {
+
+    resizeConsole(ConsoleWidth, ConsoleHeight); // Console size
+    SetConsoleTitle(TEXT("Dictionary")); // Dictionary Title
+    veTieuDeTuDien();
+    //dictionary();
+    
 }
