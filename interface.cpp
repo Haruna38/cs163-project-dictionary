@@ -13,7 +13,7 @@ void veTieuDeTuDien()
 	}
 
 	setColorBGTextXY((ConsoleWidth / 2) - 6, 1, 14, 0, "Dictionary\n");
-	setColorBGTextXY((ConsoleWidth / 2) - 13, 2, 14, 0, "Made by Group ...\n");
+	setColorBGTextXY((ConsoleWidth / 2) - 13, 2, 14, 0, "Made by Group 11\n");
 	setColor(7);
 	for (i = 0; i < ConsoleWidth; ++i)
 	{
