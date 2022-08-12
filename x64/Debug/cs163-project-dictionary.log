@@ -1,2 +1,6 @@
-﻿  LINK : D:\baitap\cs163-project-dictionary\x64\Debug\cs163-project-dictionary.exe not found or not built by the last incremental link; performing full link
+﻿  interface.cpp
+D:\baitap\cs163-project-dictionary\interface.cpp(67,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
+D:\baitap\cs163-project-dictionary\interface.cpp(69,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
+D:\baitap\cs163-project-dictionary\interface.cpp(71,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
+D:\baitap\cs163-project-dictionary\interface.cpp(73,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
   cs163-project-dictionary.vcxproj -> D:\baitap\cs163-project-dictionary\x64\Debug\cs163-project-dictionary.exe

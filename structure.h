@@ -47,7 +47,7 @@ class Character {
         CharsetTree* nextCharacters = new CharsetTree();
         bool isLastCharacter;
         string partOfSpeech = "", definition = "", topic = "";
-        Character () {};
+        //Character () {};
         Character (Character *parent, string pOF, string def, string tpc): parent(parent), partOfSpeech(pOF), definition("* " + def), topic(tpc), isLastCharacter(true) {};
         Character (Character *parent): parent(parent), partOfSpeech(""), definition(""), topic(""), isLastCharacter(false) {};
 

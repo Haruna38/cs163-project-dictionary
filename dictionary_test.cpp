@@ -3,6 +3,9 @@
 #include "Console.h"
 #include "function.h"
 
+// Trang, Vi tri dang chon, Tong muc
+short STrang, SViTriChon, STongMuc;
+
 int dictionary()
 {
     // Dictionary *dict = new Dictionary("English - Vietnamese");
@@ -50,6 +53,8 @@ int main () {
     resizeConsole(ConsoleWidth, ConsoleHeight); // Console size
     SetConsoleTitle(TEXT("Dictionary")); // Dictionary Title
     veTieuDeTuDien();
+    veMenuChinh(0);
+    STrang = 1;
     //dictionary();
     
 }
