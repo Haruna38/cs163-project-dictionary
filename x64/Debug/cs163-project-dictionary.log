@@ -1,6 +1,3 @@
-﻿  interface.cpp
-D:\baitap\cs163-project-dictionary\interface.cpp(67,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
-D:\baitap\cs163-project-dictionary\interface.cpp(69,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
-D:\baitap\cs163-project-dictionary\interface.cpp(71,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
-D:\baitap\cs163-project-dictionary\interface.cpp(73,108): warning C4267: 'argument': conversion from 'size_t' to 'SHORT', possible loss of data
+﻿  dictionary_test.cpp
+D:\baitap\cs163-project-dictionary\structure.h(67,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   cs163-project-dictionary.vcxproj -> D:\baitap\cs163-project-dictionary\x64\Debug\cs163-project-dictionary.exe

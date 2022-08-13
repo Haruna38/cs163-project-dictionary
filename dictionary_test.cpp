@@ -52,9 +52,11 @@ int main () {
 
     resizeConsole(ConsoleWidth, ConsoleHeight); // Console size
     SetConsoleTitle(TEXT("Dictionary")); // Dictionary Title
+    Cursor(false);
     veTieuDeTuDien();
     veMenuChinh(0);
     STrang = 1;
+    xuLySuKien();
     //dictionary();
     
 }

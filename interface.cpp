@@ -5,6 +5,8 @@
 #include <fstream>
 #include <windows.h>
 
+//Co dang dich hay khong
+bool BTrangThaiDichTu = false;
 
 /*
 * Black 0
@@ -31,15 +33,16 @@ void veTieuDeTuDien()
 	short i;
 	for (i = 0; i < ConsoleWidth; ++i)
 	{
-		printf("%c", 95);
+		printf("%c", 45);
 	}
-
-	setColorBGTextXY((ConsoleWidth / 2) - 6, 1, 14, 0, "Dictionary\n");
-	setColorBGTextXY((ConsoleWidth / 2) - 13, 2, 14, 0, "Made by Group 11\n");
+	const char* STRTitle = "Dictionary";
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRTitle) / 2), 1, 14, 0, STRTitle);
+	STRTitle = "Made by Group 11\n";
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRTitle) / 2), 2, 14, 0, STRTitle);
 	setColor(7);
 	for (i = 0; i < ConsoleWidth; ++i)
 	{
-		printf("%c", 95);
+		printf("%c", 45);
 	}
 }
 
@@ -51,9 +54,9 @@ void veMenuChinh(short SIndex)
 
 	//Ve menu
 	const char* STRNewGame = "Select language";
-	setColorBGTextXY(5, 8, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 6, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
 	STRNewGame = "Exit";
-	setColorBGTextXY(5, 9, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 7, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
 }
 
 void veMenuNgonNgu(short SIndex)
@@ -66,15 +69,22 @@ void veMenuNgonNgu(short SIndex)
 	const char* STRNewGame = "English to English";
 	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 6, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
 	STRNewGame = "English to Vietnamese";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 7, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 7, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
 	STRNewGame = "Vietnamese to English";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 8, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 8, 15, ((SIndex == 2) ? 2 : 0), STRNewGame);
 	STRNewGame = "Return";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 9, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 9, 15, ((SIndex == 3) ? 2 : 0), STRNewGame);
 
 
 
 }
+
+/*Cac loai menu
+* 1) Menu chinh
+* 2) chon ngon ngu
+* 3) Translate
+*/
+
 
 void xuLyPhim(KEY_EVENT_RECORD key)
 {
@@ -83,65 +93,78 @@ void xuLyPhim(KEY_EVENT_RECORD key)
 		switch (key.wVirtualKeyCode)
 		{
 		case VK_UP: // mui ten len
-			std::cout << "Up" << std::endl;
-			//switch (STrang)
-			//{
-			//case 1: //menu chinh
-			//	if (STongMuc == 2)
-			//	{
-			//		if (SViTriChon == 0)
-			//			SViTriChon = STongMuc - 1;
-			//		else
-			//			SViTriChon -= 1;
-			//		veMenuChinh(SViTriChon);
-			//	}
-			//	break;
-			//case 2: // language
-			//	if (STongMuc == 4)
-			//	{
-			//		if (SViTriChon == 0)
-			//			SViTriChon = STongMuc - 1;
-			//		else
-			//			SViTriChon -= 1;
-			//		veMenuNgonNgu(SViTriChon);
-			//	}
-			//	break;
-			//case 3: //game
-			//	break;
-			//}
+			//std::cout << "Up" << std::endl;
+			switch (STrang)
+			{
+			case 1: //menu chinh
+				if (STongMuc == 2)
+				{
+					if (SViTriChon == 0)
+						SViTriChon = STongMuc - 1;
+					else
+						SViTriChon -= 1;
+					veMenuChinh(SViTriChon);
+				}
+				break;
+			case 2: //ngon ngu
+				if (STongMuc == 4)
+				{
+					if (SViTriChon == 0)
+						SViTriChon = STongMuc - 1;
+					else
+						SViTriChon -= 1;
+					veMenuNgonNgu(SViTriChon);
+				}
+				break;
+			case 3: //dich
+				if (BTrangThaiDichTu)
+				{
+					//insert translation initializing code here
+				}
+				break;
+			}
 			break;
 		case VK_DOWN: // mui ten xuong
-			std::cout << "Down" << std::endl;
+			//std::cout << "Down" << std::endl;
+			switch (STrang)
+			{
+			case 1: //menu chinh
+				if (STongMuc == 2)
+				{
+					if (SViTriChon == STongMuc - 1)
+						SViTriChon = 0;
+					else
+						SViTriChon += 1;
+					veMenuChinh(SViTriChon);
+				}
+				break;
+			case 2: //ngon ngu
+				if (STongMuc == 4)
+				{
+					if (SViTriChon == STongMuc - 1)
+						SViTriChon = 0;
+					else
+						SViTriChon += 1;
+					veMenuNgonNgu(SViTriChon);
+				}
+				break;
+			case 3: //dich
+				if (BTrangThaiDichTu)
+				{
+					//insert translation initializing code here
+				}
+				break;
+			}
 			break;
-		//case VK_LEFT: //mui ten trai
-		//	std::cout << "Left" << std::endl;
-		//	if (BTrangThaiChoiGame)
-		//	{
-		//		BSuDungPhim = true;
-		//		CViTriConTro.X = ((CViTriConTro.X == 0) ? CTBang.SCot - 1 : CViTriConTro.X - 1);
-		//		veBang();
-		//	}
-		//	break;
-		//case VK_RIGHT: // mui ten phai
-		//	std::cout << "Right" << std::endl;
-		//	if (BTrangThaiChoiGame)
-		//	{
-		//		BSuDungPhim = true;
-		//		CViTriConTro.X = ((CViTriConTro.X == CTBang.SCot - 1) ? 0 : CViTriConTro.X + 1);
-		//		veBang();
-		//	}
-		//	break;
+		case VK_LEFT: // mui ten trai
+			//std::cout << "Left" << std::endl;
+			break;
+		case VK_RIGHT: // mui ten phai
+			//std::cout << "Right" << std::endl;
+			break;
 		case VK_RETURN: // phim enter
-			std::cout << "Enter" << std::endl;
+			//std::cout << "Enter" << std::endl;
 			break;
-		//case ClickTrai: //Phim Z - Mo o
-		//	std::cout << "Z" << std::endl;
-		//	if (BTrangThaiChoiGame)
-		//		clickTrai(CViTriConTro.Y, CViTriConTro.X);
-		//case ClickPhai: //Phim X - Cam co
-		//	std::cout << "X" << std::endl;
-		//	if (BTrangThaiChoiGame)
-		//		clickPhai(CViTriConTro.Y, CViTriConTro.X);
 		}
 	}
 }
