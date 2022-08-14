@@ -8,6 +8,8 @@
 //Co dang dich hay khong
 bool BTrangThaiDichTu = false;
 
+#define MENU_TEXT_ROW ConsoleHeight/2
+
 /*
 * Black 0
 * Blue 1
@@ -53,10 +55,10 @@ void veMenuChinh(short SIndex)
 	STongMuc = 2;
 
 	//Ve menu
-	const char* STRNewGame = "Select language";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 6, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
-	STRNewGame = "Exit";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 7, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
+	const char* STRNewGame = "  Select language  ";
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	STRNewGame = "   Exit   ";
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW+1, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
 }
 
 void veMenuNgonNgu(short SIndex)
@@ -67,13 +69,13 @@ void veMenuNgonNgu(short SIndex)
 
 	//Ve menu
 	const char* STRNewGame = "English to English";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 6, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW, 15, ((SIndex == 0) ? 2 : 0), STRNewGame);
 	STRNewGame = "English to Vietnamese";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 7, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW+1, 15, ((SIndex == 1) ? 2 : 0), STRNewGame);
 	STRNewGame = "Vietnamese to English";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 8, 15, ((SIndex == 2) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW+2, 15, ((SIndex == 2) ? 2 : 0), STRNewGame);
 	STRNewGame = "Return";
-	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), 9, 15, ((SIndex == 3) ? 2 : 0), STRNewGame);
+	setColorBGTextXY((ConsoleWidth / 2) - (strlen(STRNewGame) / 2), MENU_TEXT_ROW+3, 15, ((SIndex == 3) ? 2 : 0), STRNewGame);
 
 
 
@@ -164,7 +166,42 @@ void xuLyPhim(KEY_EVENT_RECORD key)
 			break;
 		case VK_RETURN: // phim enter
 			//std::cout << "Enter" << std::endl;
-			break;
+			switch (STrang)
+			{
+			case 1: //menu chinh
+				if (SViTriChon == 0)
+				{
+					STrang = 2;
+					deleteRow(MENU_TEXT_ROW, 3);
+					veMenuNgonNgu(0);
+				}
+				else exit(0);
+				break;
+			case 2: //ngon ngu
+				switch (SViTriChon)
+				{
+				case 0:
+					STrang = 3;
+					deleteRow(MENU_TEXT_ROW, 3);
+					//Them code init dictionary o day
+					break;
+				case 1:
+					STrang = 3;
+					deleteRow(MENU_TEXT_ROW, 3);
+					//Them code init dictionary o day
+					break;
+				case 2:
+					STrang = 3;
+					deleteRow(MENU_TEXT_ROW, 3);
+					//Them code init dictionary o day
+					break;
+				case 3:
+					STrang = 1;
+					deleteRow(MENU_TEXT_ROW, 6);
+					veMenuChinh(0);
+				}
+				break;
+			}
 		}
 	}
 }
